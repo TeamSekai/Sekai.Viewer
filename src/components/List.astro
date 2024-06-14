@@ -1,0 +1,18 @@
+---
+interface Props {
+	files: any
+}
+const { files } = Astro.props;
+---
+
+<ul id="list" class="list">
+    {files.map((file:any) =>
+        /* <Entry
+            name={file.name}
+            href={file.name}
+            size={file.directory ? "ディレクトリ" : file.sizeStr}
+            type={file.directory ? "directory" : "file"}
+        />*/
+		<p>{file.name}</p>
+    )}
+</ul>

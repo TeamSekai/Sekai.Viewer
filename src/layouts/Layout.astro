@@ -1,0 +1,36 @@
+---
+export interface Props {
+	title: string;
+	desc: string;
+}
+
+const { title = 'CDN Viewer', desc = 'Cool and Fast CDN Viewer' } = Astro.props;
+---
+
+<!doctype html>
+<html lang="ja">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="description" content={desc} />
+		<meta name="viewport" content="width=device-width" />
+		<!-- <link rel="icon" href="./favicon.ico"> -->
+		<!-- <link rel="apple-touch-icon" href="./apple-touch-icon.png" sizes="180x180"> -->
+		<meta name="theme-color" content="#85f1ff">
+		<title>{title}</title>
+	</head>
+	<body>
+		<h1 style="text-align: center;">CDN Viewer</h1>
+		<hr>
+		<slot />
+	</body>
+</html>
+
+<style>
+	html {
+		background-color: #222;
+		color: #fff;
+	}
+	hr {
+		color: #555;
+	}
+</style>

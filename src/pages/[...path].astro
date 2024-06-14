@@ -1,0 +1,28 @@
+---
+import Layout from '../layouts/Layout.astro'
+import List from '../components/List.astro';
+const dirPath: string = Astro.params.path ?? '';
+console.log(dirPath)
+
+let json;
+
+try {
+	const res = await fetch('https://cdn.ringoxd.dev/api/files/' + dirPath,{
+			mode: 'cors'
+		}
+	)
+	json = await res.json()
+} catch (e) {console.error(e)}
+
+
+if (!json) {
+	Astro.response.status = 404
+}
+
+---
+
+<Layout title="CDN Viewer" desc='Cool and Fast CDN Viewer'>
+	<h1>Dir: /{dirPath}</h1>
+	<!-- <List files={json} /> -->
+	{json != null ? <List files={json} /> : <p>404</p>}
+</Layout>
