@@ -1,9 +1,4 @@
 ---
-interface Props {
-
-	dirpath: string;
-}
-const { dirpath } = Astro.props;
 ---
 
 <div class="grid-container">
@@ -76,7 +71,7 @@ const { dirpath } = Astro.props;
 </style>
 
 <script>
-	console.log('Called')
+	console.log('Hello Sekai!')
 	let offset = 0;
 	let loading = false;
 	async function cdnfetch() {
@@ -85,7 +80,6 @@ const { dirpath } = Astro.props;
 		try {
 			const path = location.pathname
 			const repl = path.replace(/\/$/, "")
-			console.log(repl)
 			const apiurl = `https://cdn.ringoxd.dev/api/files${repl}/`
 			const clienturl = `https://cdn.ringoxd.dev/${repl}`
 			// const res = await fetch(`https://cdn.ringoxd.dev/api/files/${"${dirpath}".replace(/\/$/, "")}?offset=${offset}`, {
@@ -95,8 +89,6 @@ const { dirpath } = Astro.props;
 			const newItems = await res.json();
 			const gridContainer = document.querySelector('.grid-container');
 			newItems.forEach(file => {
-					console.log(file)
-					console.log(file.name)
 					const newItem = document.createElement('div');
 					newItem.classList.add('grid-child');
 					newItem.innerHTML = `
@@ -114,7 +106,7 @@ const { dirpath } = Astro.props;
 		}
 	}
 	async function main() {
-		console.log('DOM Loaded')
+		console.log('Called')
 		cdnfetch()
 		const loadMoreDiv = document.getElementById('load-more');
 		const observer = new IntersectionObserver(async (entries) => {
