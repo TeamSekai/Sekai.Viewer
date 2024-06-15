@@ -16,6 +16,16 @@ let json;
 
 if (dirPath == 'favicon.ico') Astro.response.status = 404;
 
+let tmp_str = dirPath.split('/')
+console.log(`Processing ${tmp_str}`)
+tmp_str.pop() // 最後の/を削除して
+tmp_str.pop() // もっかい削除
+let backpath = tmp_str.join('/')
+backpath = backpath + '/'
+console.log('done')
+console.log(dirPath)
+console.log(backpath)
+
 
 try {
 	const res = await fetch('https://cdn.ringoxd.dev/api/files/' + dirPath + '?offset=0',{
@@ -34,7 +44,7 @@ if (!json) {
 
 <Layout title="CDN Viewer" desc='Cool and Fast CDN Viewer'>
 	<h1 class="dyn">Dir: {dirPath}</h1>
-	{isNotRoot && <a href="../">戻る</a>}
+	{isNotRoot && <a href={backpath}>戻る</a>}
 	<!-- <List files={json} /> -->
 	{json != null ? <List files={json} dirpath={dirPath} /> : <p>404</p>}
 </Layout>

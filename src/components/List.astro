@@ -26,6 +26,7 @@ const { files, dirpath } = Astro.props;
 <style>
 	.grid-container {
 		display: grid;
+		grid-auto-flow: column;
 		max-width: 100vw;
 		width: 100%;
 		margin-inline: auto;
@@ -75,12 +76,9 @@ const { files, dirpath } = Astro.props;
 						const newItem = document.createElement('div');
 						newItem.classList.add('grid-child');
 						newItem.innerHTML = `
-							<a href="${clienturl}${file.name}" class="link">
-								${['png', 'jpg', 'jpeg', 'gif', 'bmp', 'svg'].includes(file.name.split('.').pop().toLowerCase()) ? `<img src=${clienturl}${file.name} alt="image" />` : ''}
-								${['mp4', 'webm', 'ogg'].includes(file.name.split('.').pop().toLowerCase()) ? `<video src=${clienturl}${file.name} controls preload="metadata"></video>` : ''}
-								${!['png', 'jpg', 'jpeg', 'gif', 'bmp', 'svg'].includes(file.name.split('.').pop().toLowerCase()) && !['mp4', 'webm', 'ogg'].includes(file.name.split('.').pop().toLowerCase()) ? `<p>${file.name}</p>` : ''}
-
-							</a>
+								${['png', 'jpg', 'jpeg', 'gif', 'bmp', 'svg'].includes(file.name.split('.').pop().toLowerCase()) ? `<a href="${clienturl}${file.name}" class="link"><img src=${clienturl}${file.name} alt="image" /></a>` : ''}
+								${['mp4', 'webm', 'ogg'].includes(file.name.split('.').pop().toLowerCase()) ? `<a href="${clienturl}${file.name}" class="link"><video src=${clienturl}${file.name} controls preload="metadata"></video></a>` : ''}
+								${!['png', 'jpg', 'jpeg', 'gif', 'bmp', 'svg'].includes(file.name.split('.').pop().toLowerCase()) && !['mp4', 'webm', 'ogg'].includes(file.name.split('.').pop().toLowerCase()) ? `<a href="${file.name}"><p>${file.name}</p></a>` : ''}
 						`;
 						gridContainer.appendChild(newItem);
 					});
