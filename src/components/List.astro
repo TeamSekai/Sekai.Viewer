@@ -122,13 +122,13 @@
 				} else if (['mp4', 'webm', 'ogg', 'mov', 'mkv'].includes(ext)) {
 					newItem.innerHTML = `<a href="${clienturl}${file.name}" class="link"><video src="${clienturl}${file.name}" controls preload="metadata"></video></a>`;
 					videoItems.push(newItem);
-				} else if (!ext || file.name.includes('.')) {
-					newItem.innerHTML = `<div class="file-container"><a href="${clienturl}${file.name}" class="link"><p>${file.name}(ファイル - ${file.sizeStr})</p></a></div>`;
-					DirItems.push(newItem);
-				} else {
+				} else if (file.directory == true) {
 					newItem.innerHTML = `<div class="dir-container"><a href="${repl}/${file.name}"><p>${file.name}(ディレクトリ)</p></a></div>`;
 					miscItems.push(newItem);
-				}
+				} else {
+					newItem.innerHTML = `<div class="file-container"><a href="${clienturl}${file.name}" class="link"><p>${file.name}(ファイル - ${file.sizeStr})</p></a></div>`;
+					DirItems.push(newItem);
+				} 
 			});
 
 			DirItems.forEach(item => gridContainer.appendChild(item));
