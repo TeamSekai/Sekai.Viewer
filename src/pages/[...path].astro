@@ -40,11 +40,9 @@ console.log(backpath)
 				mode: 'cors'
 			}
 		)
-		console.log(res.status)
 		if (res.status === 200) {
 			json = await res.json()
 		} else if (res.status === 404) {
-			console.log('404')
 			location.replace('/404')
 		} else if (res.status !== 200) {
 			console.error('Response is not OK.', res)
