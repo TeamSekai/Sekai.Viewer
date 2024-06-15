@@ -2,9 +2,12 @@
 import Layout from '../layouts/Layout.astro'
 import List from '../components/List.astro';
 let dirPath: string = Astro.params.path ?? '';
+let isNotRoot = false;
 if (dirPath === '') {
+	isNotRoot = false;
 	dirPath = '/'
  } else {
+	isNotRoot = true;
 	dirPath = '/' + dirPath + '/'
  }
 console.log(dirPath)
@@ -13,8 +16,9 @@ let json;
 
 if (dirPath == 'favicon.ico') Astro.response.status = 404;
 
+
 try {
-	const res = await fetch('https://cdn.ringoxd.dev/api/files/' + dirPath,{
+	const res = await fetch('https://cdn.ringoxd.dev/api/files/' + dirPath + '?offset=0',{
 			mode: 'cors'
 		}
 	)
@@ -30,6 +34,7 @@ if (!json) {
 
 <Layout title="CDN Viewer" desc='Cool and Fast CDN Viewer'>
 	<h1 class="dyn">Dir: {dirPath}</h1>
+	{isNotRoot && <a href="../">戻る</a>}
 	<!-- <List files={json} /> -->
 	{json != null ? <List files={json} dirpath={dirPath} /> : <p>404</p>}
 </Layout>

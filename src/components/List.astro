@@ -21,6 +21,8 @@ const { files, dirpath } = Astro.props;
     )}
 </div>
 
+<div id="load-more"></div>
+
 <style>
 	.grid-container {
 		display: grid;
@@ -44,3 +46,56 @@ const { files, dirpath } = Astro.props;
 		}
 	}
 </style>
+
+<script>
+	document.addEventListener('DOMContentLoaded', () => {
+		const loadMoreDiv = document.getElementById('load-more');
+		let offset = 10;
+		let loading = false;
+
+		const observer = new IntersectionObserver(async (entries) => {
+			if (entries[0].isIntersecting && !loading) {
+				loading = true;
+				try {
+					const path = location.pathname
+					const repl = path.replace(/\/$/, "")
+					console.log(repl)
+					const apiurl = `https://cdn.ringoxd.dev/api/files${repl}/`
+					const clienturl = `https://cdn.ringoxd.dev/${repl}`
+					// const res = await fetch(`https://cdn.ringoxd.dev/api/files/${"${dirpath}".replace(/\/$/, "")}?offset=${offset}`, {
+					const res = await fetch(`${apiurl}?offset=${offset}`, {
+						mode: 'cors'
+					});
+					const newItems = await res.json();
+					const gridContainer = document.querySelector('.grid-container');
+
+					newItems.forEach(file => {
+						console.log(file)
+						console.log(file.name)
+						const newItem = document.createElement('div');
+						newItem.classList.add('grid-child');
+						newItem.innerHTML = `
+							<a href="${clienturl}${file.name}" class="link">
+								${['png', 'jpg', 'jpeg', 'gif', 'bmp', 'svg'].includes(file.name.split('.').pop().toLowerCase()) ? `<img src=${clienturl}${file.name} alt="image" />` : ''}
+								${['mp4', 'webm', 'ogg'].includes(file.name.split('.').pop().toLowerCase()) ? `<video src=${clienturl}${file.name} controls preload="metadata"></video>` : ''}
+								${!['png', 'jpg', 'jpeg', 'gif', 'bmp', 'svg'].includes(file.name.split('.').pop().toLowerCase()) && !['mp4', 'webm', 'ogg'].includes(file.name.split('.').pop().toLowerCase()) ? `<p>${file.name}</p>` : ''}
+
+							</a>
+						`;
+						gridContainer.appendChild(newItem);
+					});
+
+					offset += 10;
+				} catch (e) {
+					console.error(e);
+				} finally {
+					loading = false;
+				}
+			}
+		}, {
+			rootMargin: '100px',
+		});
+
+		observer.observe(loadMoreDiv);
+	});
+</script>
