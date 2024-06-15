@@ -120,7 +120,7 @@
 					newItem.innerHTML = `<a href="${clienturl}${file.name}" class="link"><img src="${clienturl}${file.name}" alt="image" /></a>`;
 					imageItems.push(newItem);
 				} else if (['mp4', 'webm', 'ogg', 'mov', 'mkv'].includes(ext)) {
-					newItem.innerHTML = `<a href="${clienturl}${file.name}" class="link"><video src="${clienturl}${file.name}" controls preload="metadata"></video></a>`;
+					newItem.innerHTML = `<a href="${clienturl}${file.name}" class="link"><video src="${clienturl}${file.name}" controls preload="none"></video></a>`;
 					videoItems.push(newItem);
 				} else if (!ext || file.name.includes('.')) {
 					newItem.innerHTML = `<div class="file-container"><a href="${clienturl}${file.name}" class="link"><p>${file.name}(ファイル - ${file.sizeStr})</p></a></div>`;
