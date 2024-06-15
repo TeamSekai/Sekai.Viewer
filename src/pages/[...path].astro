@@ -12,8 +12,6 @@ if (dirPath === '') {
  }
 console.log(dirPath)
 
-let json;
-
 if (dirPath == 'favicon.ico') Astro.response.status = 404;
 
 let tmp_str = dirPath.split('/')
@@ -26,25 +24,27 @@ console.log('done')
 console.log(dirPath)
 console.log(backpath)
 
-
-try {
-	const res = await fetch('https://cdn.ringoxd.dev/api/files/' + dirPath + '?offset=0',{
-			mode: 'cors'
-		}
-	)
-	json = await res.json()
-} catch (e) {console.error(e)}
-
-
-if (!json) {
-	Astro.response.status = 404
-}
-
 ---
 
 <Layout title="CDN Viewer" desc='Cool and Fast CDN Viewer'>
 	<h1 class="dyn">Dir: {dirPath}</h1>
 	{isNotRoot && <a href={backpath}>戻る</a>}
 	<!-- <List files={json} /> -->
-	{json != null ? <List files={json} dirpath={dirPath} /> : <p>404</p>}
+	<List dirpath={dirPath} />
 </Layout>
+
+<script>
+	let json;
+	try {
+		const res = await fetch('https://cdn.ringoxd.dev/api/files' + location.pathname + '?offset=99999',{
+				mode: 'cors'
+			}
+		)
+		json = await res.json()
+		if (res.status === 404) {
+			location.href = '/404'
+		} else if (res.status !== 200) {
+			console.error('Response is not OK.', res)
+		}
+	} catch (e) {console.error(e)}
+</script>

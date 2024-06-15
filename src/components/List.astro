@@ -1,24 +1,12 @@
 ---
-import Entry from './Entry.astro';
-
 interface Props {
-	files: any;
+
 	dirpath: string;
 }
-const { files, dirpath } = Astro.props;
+const { dirpath } = Astro.props;
 ---
 
 <div class="grid-container">
-	{files.map((file:any) =>
-        <Entry
-            name={file.name}
-            href={file.name}
-            size={file.directory ? "ディレクトリ" : file.sizeStr}
-            type={file.directory ? "dir" : "file"}
-			dirPath={dirpath}
-        />
-		// <p>{file.name}</p>
-    )}
 </div>
 
 <div id="load-more"></div>
@@ -48,10 +36,49 @@ const { files, dirpath } = Astro.props;
 	}
 </style>
 
+<style is:global>
+	.misc-container {
+		margin: 20px;
+	}
+	.grid-child {
+		margin: 0;
+	}
+	.grid-child img {
+		display: block;
+		width: 100%;
+		height: auto;
+		object-fit: cover;
+	}
+	.grid-child video {
+		display: block;
+		width: 100%;
+		height: auto;
+		object-fit: cover;
+	}
+	.misc-container {
+		margin: 20px;
+	}
+	.grid-child {
+		margin: 0;
+	}
+	.grid-child img {
+		display: block;
+		width: 100%;
+		height: auto;
+		object-fit: cover;
+	}
+	.grid-child video {
+		display: block;
+		width: 100%;
+		height: auto;
+		object-fit: cover;
+	}
+</style>
+
 <script>
 	document.addEventListener('DOMContentLoaded', () => {
 		const loadMoreDiv = document.getElementById('load-more');
-		let offset = 10;
+		let offset = 0;
 		let loading = false;
 
 		const observer = new IntersectionObserver(async (entries) => {
