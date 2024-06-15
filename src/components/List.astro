@@ -82,7 +82,6 @@
 			const repl = path.replace(/\/$/, "")
 			const apiurl = `https://cdn.ringoxd.dev/api/files${repl}/`
 			const clienturl = `https://cdn.ringoxd.dev/${repl}`
-			// const res = await fetch(`https://cdn.ringoxd.dev/api/files/${"${dirpath}".replace(/\/$/, "")}?offset=${offset}`, {
 			const res = await fetch(`${apiurl}?offset=${offset}`, {
 				mode: 'cors'
 			});
@@ -92,9 +91,9 @@
 					const newItem = document.createElement('div');
 					newItem.classList.add('grid-child');
 					newItem.innerHTML = `
-							${['png', 'jpg', 'jpeg', 'gif', 'bmp', 'svg'].includes(file.name.split('.').pop().toLowerCase()) ? `<a href="${clienturl}${file.name}" class="link"><img src=${clienturl}${file.name} alt="image" /></a>` : ''}
-							${['mp4', 'webm', 'ogg'].includes(file.name.split('.').pop().toLowerCase()) ? `<a href="${clienturl}${file.name}" class="link"><video src=${clienturl}${file.name} controls preload="metadata"></video></a>` : ''}
-							${!['png', 'jpg', 'jpeg', 'gif', 'bmp', 'svg'].includes(file.name.split('.').pop().toLowerCase()) && !['mp4', 'webm', 'ogg'].includes(file.name.split('.').pop().toLowerCase()) ? `<a href="${file.name}"><p>${file.name}</p></a>` : ''}
+						${!['png', 'jpg', 'jpeg', 'gif', 'bmp', 'svg'].includes(file.name.split('.').pop().toLowerCase()) && !['mp4', 'webm', 'ogg'].includes(file.name.split('.').pop().toLowerCase()) ? `<a href="${file.name}"><p>${file.name}</p></a>` : ''}
+						${['png', 'jpg', 'jpeg', 'gif', 'bmp', 'svg'].includes(file.name.split('.').pop().toLowerCase()) ? `<a href="${clienturl}${file.name}" class="link"><img src="${clienturl}${file.name}" alt="image" /></a>` : ''}
+						${['mp4', 'webm', 'ogg'].includes(file.name.split('.').pop().toLowerCase()) ? `<a href="${clienturl}${file.name}" class="link"><video src="${clienturl}${file.name}" controls preload="metadata"></video></a>` : ''}
 					`;
 					gridContainer.appendChild(newItem);
 				});
