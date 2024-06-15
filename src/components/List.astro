@@ -35,9 +35,6 @@
 </style>
 
 <style is:global>
-	.misc-container {
-		margin: 20px;
-	}
 	.grid-child {
 		margin: 0;
 	}
@@ -53,7 +50,18 @@
 		height: auto;
 		object-fit: cover;
 	}
-	.misc-container {
+	.file-container {
+		text-align: center;
+		margin: 0;
+		border: 2px solid #333;
+	}
+	.file-container a {
+		color: #5ac76c;
+	}
+	.file-container a:hover {
+		color: #398145;
+	}
+	.dir-container {
 		text-align: center;
 		margin: 0;
 		border: 2px solid #333;
@@ -90,13 +98,14 @@
 			const path = location.pathname
 			const repl = path.replace(/\/$/, "")
 			const apiurl = `https://cdn.ringoxd.dev/api/files${repl}/`
-			const clienturl = `https://cdn.ringoxd.dev/${repl}`
+			const clienturl = `https://cdn.ringoxd.dev${repl}/`
 			const res = await fetch(`${apiurl}?offset=${offset}`, {
 				mode: 'cors'
 			});
 			const newItems = await res.json();
 			const gridContainer = document.querySelector('.grid-container');
 			
+			const DirItems = [];
 			const miscItems = [];
 			const imageItems = [];
 			const videoItems = [];
@@ -106,19 +115,24 @@
 				const newItem = document.createElement('div');
 				newItem.classList.add('grid-child');
  
-				if (!['png', 'jpg', 'jpeg', 'gif', 'bmp', 'svg'].includes(ext) && !['mp4', 'webm', 'ogg'].includes(ext)) {
-					newItem.innerHTML = `<div class="misc-container"><a href="${file.name}"><p>${file.name}(ディレクトリ)</p></a></div>`;
-					miscItems.push(newItem);
-				} else if (['png', 'jpg', 'jpeg', 'gif', 'bmp', 'svg'].includes(ext)) {
+				
+				if (['png', 'jpg', 'jpeg', 'gif', 'bmp', 'svg', 'webp'].includes(ext)) {
 					newItem.innerHTML = `<a href="${clienturl}${file.name}" class="link"><img src="${clienturl}${file.name}" alt="image" /></a>`;
 					imageItems.push(newItem);
-				} else if (['mp4', 'webm', 'ogg'].includes(ext)) {
+				} else if (['mp4', 'webm', 'ogg', 'mov', 'mkv'].includes(ext)) {
 					newItem.innerHTML = `<a href="${clienturl}${file.name}" class="link"><video src="${clienturl}${file.name}" controls preload="metadata"></video></a>`;
 					videoItems.push(newItem);
+				} else if (!ext || file.name.includes('.')) {
+					newItem.innerHTML = `<div class="file-container"><a href="${clienturl}${file.name}" class="link"><p>${file.name}(ファイル - ${file.sizeStr})</p></a></div>`;
+					DirItems.push(newItem);
+				} else {
+					newItem.innerHTML = `<div class="dir-container"><a href="${repl}/${file.name}"><p>${file.name}(ディレクトリ)</p></a></div>`;
+					miscItems.push(newItem);
 				}
 			});
 
 			// 画像でも動画でもないファイルを最初に追加
+			DirItems.forEach(item => gridContainer.appendChild(item));
 			miscItems.forEach(item => gridContainer.appendChild(item));
 			imageItems.forEach(item => gridContainer.appendChild(item));
 			videoItems.forEach(item => gridContainer.appendChild(item));
