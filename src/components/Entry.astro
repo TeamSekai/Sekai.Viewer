@@ -22,6 +22,6 @@ const isVideo = ['mp4', 'webm', 'ogg', 'mov'].includes(Extension);
 <div class="grid-child">
 		{isImage && <a href={`https://cdn.ringoxd.dev${dirPath}${name}`} class="link"><img src={`https://cdn.ringoxd.dev${dirPath}${name}`} alt="image" /></a>}
 		{isVideo && <a href={`https://cdn.ringoxd.dev${dirPath}${name}`} class="link"><video src={`https://cdn.ringoxd.dev${dirPath}${name}`} controls preload="metadata" /></a>}
-		{!isImage && !isVideo && <div class="misc-container"><a href={`${dirPath}${name}`} class="link"><h1>{`${name}`}</h1></a></div>}
+		{!isImage && !isVideo && <div class="misc-container"><h1><a href={`${dirPath}${name}`} class="link">{`${name}`}</a></h1></div>}
 </div>
 

@@ -4,7 +4,10 @@
 <div class="grid-container">
 </div>
 
-<div id="load-more"></div>
+<div id="load-more" class="flex justify-center flex-row items-center">
+	<div class="animate-spin h-10 w-10 border-4 border-blue-500 rounded-full border-t-transparent"></div>
+	<h1 class="m-4 text-2xl">Loading...</h1>
+</div>
 
 <style>
 	.grid-container {
@@ -51,7 +54,9 @@
 		object-fit: cover;
 	}
 	.misc-container {
-		margin: 20px;
+		text-align: center;
+		margin: 0;
+		border: 2px solid #333;
 	}
 	.grid-child {
 		margin: 0;
@@ -68,6 +73,9 @@
 		height: auto;
 		object-fit: cover;
 	}
+	.hidden {
+		opacity: 0;
+	}
 </style>
 
 <script>
@@ -77,6 +85,7 @@
 	async function cdnfetch() {
 		console.log('Fetching')
 		loading = true;
+		document.getElementById('load-more').classList.remove('hidden');
 		try {
 			const path = location.pathname
 			const repl = path.replace(/\/$/, "")
@@ -87,21 +96,39 @@
 			});
 			const newItems = await res.json();
 			const gridContainer = document.querySelector('.grid-container');
+			
+			const miscItems = [];
+			const imageItems = [];
+			const videoItems = [];
+
 			newItems.forEach(file => {
-					const newItem = document.createElement('div');
-					newItem.classList.add('grid-child');
-					newItem.innerHTML = `
-						${!['png', 'jpg', 'jpeg', 'gif', 'bmp', 'svg'].includes(file.name.split('.').pop().toLowerCase()) && !['mp4', 'webm', 'ogg'].includes(file.name.split('.').pop().toLowerCase()) ? `<a href="${file.name}"><p>${file.name}</p></a>` : ''}
-						${['png', 'jpg', 'jpeg', 'gif', 'bmp', 'svg'].includes(file.name.split('.').pop().toLowerCase()) ? `<a href="${clienturl}${file.name}" class="link"><img src="${clienturl}${file.name}" alt="image" /></a>` : ''}
-						${['mp4', 'webm', 'ogg'].includes(file.name.split('.').pop().toLowerCase()) ? `<a href="${clienturl}${file.name}" class="link"><video src="${clienturl}${file.name}" controls preload="metadata"></video></a>` : ''}
-					`;
-					gridContainer.appendChild(newItem);
-				});
+				const ext = file.name.split('.').pop().toLowerCase();
+				const newItem = document.createElement('div');
+				newItem.classList.add('grid-child');
+ 
+				if (!['png', 'jpg', 'jpeg', 'gif', 'bmp', 'svg'].includes(ext) && !['mp4', 'webm', 'ogg'].includes(ext)) {
+					newItem.innerHTML = `<div class="misc-container"><a href="${file.name}"><p>${file.name}(ディレクトリ)</p></a></div>`;
+					miscItems.push(newItem);
+				} else if (['png', 'jpg', 'jpeg', 'gif', 'bmp', 'svg'].includes(ext)) {
+					newItem.innerHTML = `<a href="${clienturl}${file.name}" class="link"><img src="${clienturl}${file.name}" alt="image" /></a>`;
+					imageItems.push(newItem);
+				} else if (['mp4', 'webm', 'ogg'].includes(ext)) {
+					newItem.innerHTML = `<a href="${clienturl}${file.name}" class="link"><video src="${clienturl}${file.name}" controls preload="metadata"></video></a>`;
+					videoItems.push(newItem);
+				}
+			});
+
+			// 画像でも動画でもないファイルを最初に追加
+			miscItems.forEach(item => gridContainer.appendChild(item));
+			imageItems.forEach(item => gridContainer.appendChild(item));
+			videoItems.forEach(item => gridContainer.appendChild(item));
+
 			offset += 10;
 		} catch (e) {
 			console.error(e);
 		} finally {
 			loading = false;
+			document.getElementById('load-more').classList.add('hidden');
 		}
 	}
 	async function main() {
