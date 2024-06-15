@@ -81,7 +81,7 @@
 		height: auto;
 		object-fit: cover;
 	}
-	.hidden {
+	.hideme {
 		opacity: 0;
 	}
 </style>
@@ -93,7 +93,7 @@
 	async function cdnfetch() {
 		console.log('Fetching')
 		loading = true;
-		document.getElementById('load-more').classList.remove('hidden');
+		document.getElementById('load-more').classList.remove('hideme');
 		try {
 			const path = location.pathname
 			const repl = path.replace(/\/$/, "")
@@ -142,7 +142,7 @@
 			console.error(e);
 		} finally {
 			loading = false;
-			document.getElementById('load-more').classList.add('hidden');
+			document.getElementById('load-more').classList.add('hideme');
 		}
 	}
 	async function main() {
