@@ -1,10 +1,17 @@
 ---
 import Layout from '../layouts/Layout.astro'
 import List from '../components/List.astro';
-const dirPath: string = Astro.params.path ?? '';
+let dirPath: string = Astro.params.path ?? '';
+if (dirPath === '') {
+	dirPath = '/'
+ } else {
+	dirPath = '/' + dirPath + '/'
+ }
 console.log(dirPath)
 
 let json;
+
+if (dirPath == 'favicon.ico') Astro.response.status = 404;
 
 try {
 	const res = await fetch('https://cdn.ringoxd.dev/api/files/' + dirPath,{
@@ -22,7 +29,7 @@ if (!json) {
 ---
 
 <Layout title="CDN Viewer" desc='Cool and Fast CDN Viewer'>
-	<h1>Dir: /{dirPath}</h1>
+	<h1 class="dyn">Dir: {dirPath}</h1>
 	<!-- <List files={json} /> -->
-	{json != null ? <List files={json} /> : <p>404</p>}
+	{json != null ? <List files={json} dirpath={dirPath} /> : <p>404</p>}
 </Layout>

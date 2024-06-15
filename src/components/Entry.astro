@@ -1,0 +1,40 @@
+---
+
+type EType = 'file' | 'dir';
+
+interface Props {
+	name: string;
+	href: string;
+	size?: string;
+	type: EType;
+	dirPath: string;
+}
+
+const { name, href, size, type, dirPath } = Astro.props;
+
+const Extension = name.split('.').pop().toLowerCase();
+
+const isImage = ['png', 'jpg', 'jpeg', 'gif', 'bmp', 'svg'].includes(Extension);
+const isVideo = ['mp4', 'webm', 'ogg'].includes(Extension);
+
+---
+
+<div class="grid-child">
+	<a href={`https://cdn.ringoxd.dev${dirPath}${name}`} class="link">
+		{isImage && <img src={`https://cdn.ringoxd.dev${dirPath}${name}`} alt="image" />}
+		{isVideo && <video src={`https://cdn.ringoxd.dev${dirPath}${name}`} controls />}
+		{!isImage && !isVideo && <p>{`${name}`}</p>}
+	</a>
+</div>
+
+<style>
+	.grid-child {
+		margin: 0;
+	}
+	.grid-child img {
+		display: block;
+		width: 100%;
+		height: auto;
+		object-fit: cover;
+	}
+</style>
