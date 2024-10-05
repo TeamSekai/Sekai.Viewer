@@ -64,7 +64,11 @@
 	.dir-container {
 		text-align: center;
 		margin: 0;
+		padding: 0.65em;
 		border: 2px solid #333;
+	}
+	.dir-container p {
+		font-size: 1.45em;
 	}
 	.grid-child {
 		margin: 0;
@@ -90,6 +94,33 @@
 	console.log('Hello Sekai!')
 	let offset = 0;
 	let loading = false;
+
+	function checkGridCoverage() {
+		console.log('Called checker')
+	    const gridContainer = document.querySelector('.grid-container');
+	    const viewportWidth = window.innerWidth;
+	    const viewportHeight = window.innerHeight;
+
+	    // グリッドの幅と高さを取得
+	    const gridWidth = gridContainer.clientWidth;
+	    const gridHeight = gridContainer.clientHeight;
+
+	    // 視覚的な空白率を計算
+	    const horizontalGap = (viewportWidth - gridWidth) / viewportWidth * 100;
+	    const verticalGap = (viewportHeight - gridHeight) / viewportHeight * 100;
+
+	    // 空白率が一定以上の場合、グリッドが画面全体を埋めていないと判断
+	    const threshold = 10; // 95%を目安としています
+
+	    if (horizontalGap > threshold || verticalGap > threshold) {
+	        console.log('画面全体がGridレイアウトで埋まれていません');
+	        return true;
+	    } else {
+	        console.log('画面全体がGridレイアウトで埋まっています');
+	        return false;
+	    }
+	}
+
 	async function cdnfetch() {
 		console.log('Fetching')
 		loading = true;
@@ -144,9 +175,21 @@
 			document.getElementById('load-more').classList.add('hideme');
 		}
 	}
+	async function firstLoad() {
+		await cdnfetch()
+		let c = 0;
+		while (c <= 5) {
+			if (!checkGridCoverage) {
+				await cdnfetch()
+				c++;
+			} else {
+				break;
+			}
+		}
+	}
 	async function main() {
 		console.log('Called')
-		cdnfetch()
+		await firstLoad()
 		const loadMoreDiv = document.getElementById('load-more');
 		const observer = new IntersectionObserver(async (entries) => {
 			if (entries[0].isIntersecting && !loading) {
@@ -166,4 +209,6 @@
 	} else {
 		main()
 	}
+
+
 </script>
